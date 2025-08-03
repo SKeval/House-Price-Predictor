@@ -28,7 +28,6 @@
             padding: 30px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             max-width: 500px;
-            height: 800px;
             width: 100%;
             transform: translateY(0);
             transition: transform 0.3s ease;
@@ -104,50 +103,25 @@
             transform: translateY(0);
         }
 
-        .result-section {
-            margin-top: 30px;
-            padding: 25px;
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            border-radius: 15px;
-            text-align: center;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.5s ease;
-        }
-
-        .result-section.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .result-label {
-            color: white;
-            font-size: 1.2em;
-            margin-bottom: 10px;
-            font-weight: 500;
-        }
-
-        .result-value {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 15px;
-            border-radius: 10px;
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #333;
-            min-height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .input-icon {
-            position: relative;
-        }
-
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 15px;
+        }
+
+        .prediction-result {
+            margin-top: 20px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 15px;
+            text-align: center;
+            color: white;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+
+        .error {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
         }
 
         @media (max-width: 600px) {
@@ -165,7 +139,7 @@
     <div class="container">
         <h1>🏠 House Price Predictor</h1>
         
-        <form method="POST" action="{{ url_for('form') }}" id="housePriceForm">
+        <form method="POST" action="/predict">
             <div class="form-group">
                 <label for="squareFeet">Square Feet</label>
                 <input type="number" id="squareFeet" name="squareFeet" min="100" max="10000" step="1" required>
@@ -199,18 +173,13 @@
             </div>
 
             <button type="submit" class="submit-btn">Predict House Price</button>
-            <br>
-            <br>
-              {{ prediction_text }}      
         </form>
 
-        <div id="resultSection" class="result-section">
-            <div class="result-label">Predicted House Price</div>
-            <div id="resultValue" class="result-value">
-                Enter house details and click predict
-            </div>
+        {% if prediction_text %}
+        <div class="prediction-result {% if 'error' in prediction_text.lower() or 'invalid' in prediction_text.lower() %}error{% endif %}">
+            {{ prediction_text }}
         </div>
-           
+        {% endif %}
     </div>
 </body>
 </html>
